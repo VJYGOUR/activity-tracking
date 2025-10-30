@@ -15,18 +15,15 @@ import {
   Cell,
 } from "recharts";
 
-// Define proper types for tooltip
-interface TooltipPayload {
-  name: string;
-  value: number;
-  color: string;
-  dataKey: string;
-  payload: Record<string, unknown>;
-}
-
 interface CustomTooltipProps {
   active?: boolean;
-  payload?: TooltipPayload[];
+  payload?: Array<{
+    name: string;
+    value: number;
+    color: string;
+    dataKey: string;
+    payload: Record<string, unknown>;
+  }>;
   label?: string;
 }
 
@@ -67,7 +64,6 @@ const Analytics: React.FC = () => {
           data = await analyticsAPI.getWeeklyAnalytics();
       }
 
-      // Ensure all required properties exist with fallbacks
       const completeData: AnalyticsData = {
         ...data,
         averageDailyTime:
@@ -91,10 +87,8 @@ const Analytics: React.FC = () => {
     loadAnalytics();
   }, [loadAnalytics]);
 
-  // Format data for Recharts
   const getDailyChartData = () => {
     if (!analyticsData) return [];
-
     return analyticsData.dailyData.map((day) => ({
       date: new Date(day.date).toLocaleDateString("en-US", {
         month: "short",
@@ -108,7 +102,6 @@ const Analytics: React.FC = () => {
 
   const getCategoryPieData = () => {
     if (!analyticsData) return [];
-
     return analyticsData.categoryData.map((category) => ({
       name: category.category.replace("_", " "),
       value: category.minutes,
@@ -117,7 +110,6 @@ const Analytics: React.FC = () => {
     }));
   };
 
-  // Colors for charts
   const COLORS = [
     "#3B82F6",
     "#10B981",
@@ -130,7 +122,7 @@ const Analytics: React.FC = () => {
   ];
 
   const getCategoryEmoji = (category: string): string => {
-    const emojis: { [key: string]: string } = {
+    const emojis: Record<string, string> = {
       coding: "💻",
       studying: "📚",
       reading: "📖",
@@ -164,7 +156,6 @@ const Analytics: React.FC = () => {
     }
   };
 
-  // Custom tooltip for charts with proper typing
   const CustomTooltip: React.FC<CustomTooltipProps> = ({
     active,
     payload,
@@ -187,10 +178,13 @@ const Analytics: React.FC = () => {
     return null;
   };
 
-  // Custom tooltip for pie chart
   const PieTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
     if (active && payload && payload.length) {
-      const data = payload[0].payload;
+      const data = payload[0].payload as {
+        name: string;
+        value: number;
+        percentage: number;
+      };
       return (
         <div className="bg-gray-800 border border-gray-600 p-3 rounded-lg shadow-lg">
           <p className="text-white font-medium">{data.name}</p>
@@ -204,12 +198,6 @@ const Analytics: React.FC = () => {
       );
     }
     return null;
-  };
-
-  // FIXED: Proper Pie Chart label function
-  const renderPieLabel = (props: any) => {
-    const { name, value } = props;
-    return `${name}: ${formatTime(value)}`;
   };
 
   if (loading) {
@@ -237,7 +225,6 @@ const Analytics: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white">Time Analytics</h1>
@@ -246,7 +233,6 @@ const Analytics: React.FC = () => {
           </p>
         </div>
 
-        {/* Time Range Selector */}
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex bg-gray-800 p-1 rounded-lg">
             <button
@@ -283,7 +269,6 @@ const Analytics: React.FC = () => {
         </div>
       </div>
 
-      {/* Custom Date Range */}
       {timeRange === "custom" && (
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
           <div className="flex flex-col sm:flex-row gap-4 items-end">
@@ -329,7 +314,6 @@ const Analytics: React.FC = () => {
         </div>
       )}
 
-      {/* Summary Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
           <div className="flex items-center justify-between">
@@ -394,9 +378,7 @@ const Analytics: React.FC = () => {
         </div>
       </div>
 
-      {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Daily Time Bar Chart */}
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
           <h3 className="text-xl font-bold text-white mb-6">
             📅 Daily Time Distribution
@@ -424,7 +406,7 @@ const Analytics: React.FC = () => {
           </div>
         </div>
 
-        {/* Category Pie Chart - FIXED */}
+        {/* FIXED: Pie Chart without custom labels - using Legend instead */}
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
           <h3 className="text-xl font-bold text-white mb-6">
             🏷️ Time by Category
@@ -437,7 +419,6 @@ const Analytics: React.FC = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={renderPieLabel}
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -450,13 +431,13 @@ const Analytics: React.FC = () => {
                   ))}
                 </Pie>
                 <Tooltip content={<PieTooltip />} />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
 
-      {/* Category Breakdown Table */}
       <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
         <h3 className="text-xl font-bold text-white mb-6">
           📋 Detailed Category Breakdown
@@ -511,7 +492,6 @@ const Analytics: React.FC = () => {
         </div>
       </div>
 
-      {/* Productivity Insights */}
       <div className="bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-xl p-6 border border-blue-800/50">
         <h3 className="text-lg font-semibold text-white mb-4">
           💡 Advanced Analytics & Insights
