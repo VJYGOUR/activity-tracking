@@ -44,8 +44,8 @@ export interface AnalyticsData {
   dailyData: { date: string; minutes: number; activities: number }[];
   categoryData: { category: string; minutes: number; percentage: number }[];
   productivityScore: number;
-  averageDailyTime: number;
-  mostProductiveDay: string;
+  averageDailyTime: number; // Ensure this exists
+  mostProductiveDay: string; // Ensure this exists
 }
 
 // Recharts compatible types

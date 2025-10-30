@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { analyticsAPI } from "../services/analyticsAPI";
-import type { AnalyticsData, DailyChartData, CategoryPieData } from "../types";
+import type { AnalyticsData } from "../types";
 import {
   BarChart,
   Bar,
@@ -28,6 +28,17 @@ interface CustomTooltipProps {
   active?: boolean;
   payload?: TooltipPayload[];
   label?: string;
+}
+
+// Recharts Pie label render props
+interface PieLabelRenderProps {
+  cx: number;
+  cy: number;
+  midAngle: number;
+  innerRadius: number;
+  outerRadius: number;
+  percent: number;
+  index: number;
 }
 
 // Simple interface for Recharts data
@@ -72,7 +83,19 @@ const Analytics: React.FC = () => {
           data = await analyticsAPI.getWeeklyAnalytics();
       }
 
-      setAnalyticsData(data);
+      // Ensure all required properties exist with fallbacks
+      const completeData: AnalyticsData = {
+        ...data,
+        averageDailyTime:
+          data.averageDailyTime ||
+          Math.round(data.totalMinutes / (timeRange === "weekly" ? 7 : 30)),
+        mostProductiveDay:
+          data.mostProductiveDay ||
+          data.dailyData[0]?.date ||
+          new Date().toISOString().split("T")[0],
+      };
+
+      setAnalyticsData(completeData);
     } catch (error) {
       console.error("Error loading analytics:", error);
     } finally {
@@ -84,7 +107,7 @@ const Analytics: React.FC = () => {
     loadAnalytics();
   }, [loadAnalytics]);
 
-  // Format data for Recharts - SIMPLE object with index signature
+  // Format data for Recharts
   const getDailyChartData = (): ChartDataItem[] => {
     if (!analyticsData) return [];
 
@@ -146,11 +169,15 @@ const Analytics: React.FC = () => {
   };
 
   const formatDate = (dateStr: string): string => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-    });
+    try {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+      });
+    } catch {
+      return "Invalid date";
+    }
   };
 
   // Custom tooltip for charts with proper typing
@@ -174,6 +201,60 @@ const Analytics: React.FC = () => {
       );
     }
     return null;
+  };
+
+  // Custom tooltip for pie chart
+  const PieTooltip: React.FC<CustomTooltipProps> = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="bg-gray-800 border border-gray-600 p-3 rounded-lg shadow-lg">
+          <p className="text-white font-medium">{data.name}</p>
+          <p className="text-sm text-blue-400">
+            Time: {formatTime(data.value)}
+          </p>
+          <p className="text-sm text-gray-400">
+            Percentage: {data.percentage}%
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+
+  // Fixed Pie Chart label function with correct Recharts types
+  const renderCustomizedLabel = ({
+    cx,
+    cy,
+    midAngle,
+    innerRadius,
+    outerRadius,
+    percent,
+    index,
+  }: PieLabelRenderProps & { index: number }) => {
+    if (!analyticsData) return null;
+
+    const RADIAN = Math.PI / 180;
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+
+    // Only show label if percentage is significant (> 5%)
+    if (percent < 0.05) return null;
+
+    return (
+      <text
+        x={x}
+        y={y}
+        fill="white"
+        textAnchor={x > cx ? "start" : "end"}
+        dominantBaseline="central"
+        fontSize={12}
+        fontWeight="bold"
+      >
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
   };
 
   if (loading) {
@@ -232,6 +313,16 @@ const Analytics: React.FC = () => {
               }`}
             >
               📆 Monthly
+            </button>
+            <button
+              onClick={() => setTimeRange("custom")}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                timeRange === "custom"
+                  ? "bg-blue-600 text-white"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              📋 Custom
             </button>
           </div>
         </div>
@@ -378,9 +469,8 @@ const Analytics: React.FC = () => {
           </div>
         </div>
 
-        {/* Category Pie Chart */}
-        {/* Category Pie Chart */}
-        {/* Category Pie Chart */}
+        {/* Category Pie Chart - FIXED: Using proper label function */}
+        {/* Simpler Pie Chart without custom labels */}
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
           <h3 className="text-xl font-bold text-white mb-6">
             🏷️ Time by Category
@@ -393,9 +483,6 @@ const Analytics: React.FC = () => {
                   cx="50%"
                   cy="50%"
                   labelLine={false}
-                  label={({ name, value }: any) =>
-                    `${name}: ${formatTime(value)}`
-                  }
                   outerRadius={80}
                   fill="#8884d8"
                   dataKey="value"
@@ -407,7 +494,8 @@ const Analytics: React.FC = () => {
                     />
                   ))}
                 </Pie>
-                <Tooltip />
+                <Tooltip content={<PieTooltip />} />
+                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
