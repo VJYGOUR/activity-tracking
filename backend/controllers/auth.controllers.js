@@ -38,14 +38,7 @@ export const signup = async (req, res) => {
     // ✅ ADDED: Generate email verification token
     const emailVerificationToken = crypto.randomBytes(32).toString("hex");
     const emailVerificationExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    sendNewUserNotification(user).catch((error) => {
-      console.error("Failed to send admin notification:", error);
-    });
 
-    // NEW: Send welcome email to user (non-blocking, optional)
-    sendWelcomeEmail(user).catch((error) => {
-      console.error("Failed to send welcome email:", error);
-    });
     // Create new user in database with verification data
     const user = new User({
       name,
@@ -65,7 +58,14 @@ export const signup = async (req, res) => {
       email,
       emailVerificationToken
     );
+    sendNewUserNotification(user).catch((error) => {
+      console.error("Failed to send admin notification:", error);
+    });
 
+    // NEW: Send welcome email to user (non-blocking, optional)
+    sendWelcomeEmail(user).catch((error) => {
+      console.error("Failed to send welcome email:", error);
+    });
     // Send success response with user data
     res.status(201).json({
       user: {
