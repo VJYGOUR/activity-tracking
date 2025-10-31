@@ -73,10 +73,10 @@ const Login = () => {
               </svg>
             </div>
             <h2 className="text-3xl font-bold text-gray-900">
-              Welcome back to Stoq
+              Welcome back to ChronoSync
             </h2>
             <p className="text-gray-600 text-sm">
-              Sign in to your inventory management
+              Sign in to your Time management
             </p>
           </div>
 

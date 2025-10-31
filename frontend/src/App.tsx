@@ -32,7 +32,6 @@ const App: React.FC = () => {
         {/* Protected routes with sidebar layout */}
         <Route element={<Layout />}>
           <Route element={<ProtectedRoute />}>
-            <Route path="/dashboard" element={<Dashboard />} />{" "}
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/add-activity" element={<AddActivity />} />
             <Route path="/history" element={<History />} />

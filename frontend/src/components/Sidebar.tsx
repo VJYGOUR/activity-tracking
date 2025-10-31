@@ -13,7 +13,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { logout } = useAuth();
 
   const navItems = [
-    { id: "dashboard", label: "Dashboard", icon: "📊", path: "/" },
+    { id: "dashboard", label: "Dashboard", icon: "📊", path: "/dashboard" },
     {
       id: "add-activity",
       label: "Add Activity",

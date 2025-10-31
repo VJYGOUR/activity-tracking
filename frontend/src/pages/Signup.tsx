@@ -106,7 +106,7 @@ const Signup = () => {
             </div>
             <h2 className="text-3xl font-bold text-gray-900">Create Account</h2>
             <p className="text-gray-600 text-sm">
-              Join Stoq to manage your business
+              Join ChronoSync to manage your Time
             </p>
           </div>
 
