@@ -59,10 +59,10 @@ export const sendVerificationEmail = async (email, verificationToken) => {
     const msg = {
       to: email,
       from: process.env.SENDGRID_FROM_EMAIL,
-      subject: "Verify Your ChronoSync Account",
+      subject: "Verify Your LogTaskr Account",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2>Please verify Your Email to start using ChronoSync</h2>
+          <h2>Please verify Your Email to start using LogTaskr</h2>
           <p>Please click the button below to verify your email address:</p>
           <a href="${verificationUrl}" 
              style="background-color: #007bff; color: white; padding: 12px 24px; 
@@ -91,7 +91,7 @@ export const sendNewUserNotification = async (user) => {
     const msg = {
       to: process.env.ADMIN_EMAIL || process.env.SENDGRID_FROM_EMAIL, // Send to admin or fallback to from email
       from: process.env.SENDGRID_FROM_EMAIL,
-      subject: "🎉 New User Registered on ChronoSync!",
+      subject: "🎉 New User Registered on LogTaskr!",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #3B82F6;">New User Alert!</h2>
@@ -105,7 +105,7 @@ export const sendNewUserNotification = async (user) => {
             }</p>
           </div>
           <p style="margin-top: 20px; color: #6b7280;">
-            This is an automated notification from your ChronoSync app.
+            This is an automated notification from your LogTaskr app.
           </p>
         </div>
       `,
@@ -126,11 +126,11 @@ export const sendWelcomeEmail = async (user) => {
     const msg = {
       to: user.email,
       from: process.env.SENDGRID_FROM_EMAIL,
-      subject: "Welcome to ChronoSync! 🎉",
+      subject: "Welcome to LogTaskr! 🎉",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-          <h2 style="color: #3B82F6;">Welcome to ChronoSync, ${user.name}! 🎉</h2>
-          <p>We're excited to have you on board. Here's what you can do with ChronoSync:</p>
+          <h2 style="color: #3B82F6;">Welcome to LogTaskr, ${user.name}! 🎉</h2>
+          <p>We're excited to have you on board. Here's what you can do with LogTaskr:</p>
           <ul>
             <li>📊 Track your time across different activities</li>
             <li>📈 View beautiful analytics and insights</li>

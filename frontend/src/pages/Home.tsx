@@ -14,7 +14,7 @@ const Home: React.FC = () => {
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  ChronoSync
+                  LogTaskr
                 </h1>
               </div>
             </div>
@@ -255,7 +255,7 @@ const Home: React.FC = () => {
             Ready to Take Control of Your Time?
           </h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of productive people who use ChronoSync to understand
+            Join thousands of productive people who use LogTaskr to understand
             and optimize their daily activities.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -295,7 +295,7 @@ const Home: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
-                ChronoSync
+                LogTaskr
               </h3>
               <p className="text-gray-400">
                 Helping you make the most of every minute.
@@ -369,7 +369,7 @@ const Home: React.FC = () => {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 ChronoSync. All rights reserved.</p>
+            <p>&copy; 2024 LogTaskr. All rights reserved.</p>
           </div>
         </div>
       </footer>

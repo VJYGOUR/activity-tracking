@@ -40,7 +40,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick, showMenu }) => {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-lg">⏱️</span>
               </div>
-              <h1 className="ml-2 text-xl font-bold text-white">ChronoSync</h1>{" "}
+              <h1 className="ml-2 text-xl font-bold text-white">LogTaskr</h1>{" "}
               {/* White text */}
             </div>
           </div>
