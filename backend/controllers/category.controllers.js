@@ -1,13 +1,6 @@
 import Category from "../models/category.models.js";
-
+import { defaultCategories } from "./categoryConfig.js";
 // Default categories that come with every account
-const defaultCategories = [
-  { name: "coding", emoji: "💻", color: "#3B82F6", isDefault: true },
-  { name: "studying", emoji: "📚", color: "#10B981", isDefault: true },
-  { name: "reading", emoji: "📖", color: "#8B5CF6", isDefault: true },
-  { name: "speaking", emoji: "🗣️", color: "#F59E0B", isDefault: true },
-  { name: "gf_time", emoji: "💑", color: "#EC4899", isDefault: true },
-];
 
 // @desc    Get all categories for user (default + custom)
 // @route   GET /api/categories
@@ -27,6 +20,7 @@ export const getCategories = async (req, res) => {
         emoji: cat.emoji,
         color: cat.color,
         isDefault: false,
+        isProductive: cat.isProductive || false, // Add this
         _id: cat._id,
       })),
     ];
@@ -48,10 +42,13 @@ export const getCategories = async (req, res) => {
 // @desc    Create a new custom category
 // @route   POST /api/categories
 // @access  Private
+// @desc    Create a new custom category
+// @route   POST /api/categories
+// @access  Private
 export const createCategory = async (req, res) => {
   try {
     const userId = req.userId;
-    const { name, emoji, color } = req.body;
+    const { name, emoji, color, isProductive } = req.body; // ADD isProductive
 
     // Validate required fields
     if (!name) {
@@ -93,6 +90,7 @@ export const createCategory = async (req, res) => {
       emoji: emoji || "📝",
       color: color || "#666666",
       isDefault: false,
+      isProductive: isProductive || false, // User can choose if productive
     });
 
     await category.save();
@@ -156,11 +154,14 @@ export const deleteCategory = async (req, res) => {
 // @desc    Update a custom category
 // @route   PUT /api/categories/:id
 // @access  Private
+// @desc    Update a custom category
+// @route   PUT /api/categories/:id
+// @access  Private
 export const updateCategory = async (req, res) => {
   try {
     const { id } = req.params;
     const userId = req.userId;
-    const { name, emoji, color } = req.body;
+    const { name, emoji, color, isProductive } = req.body; // ADD isProductive
 
     const category = await Category.findOne({ _id: id, userId });
 
@@ -183,6 +184,8 @@ export const updateCategory = async (req, res) => {
     if (name) category.name = name.toLowerCase().trim();
     if (emoji) category.emoji = emoji;
     if (color) category.color = color;
+    if (typeof isProductive !== "undefined")
+      category.isProductive = isProductive; // ADD this line
 
     await category.save();
 

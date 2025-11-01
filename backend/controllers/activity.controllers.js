@@ -1,4 +1,5 @@
 import Activity from "../models/activity.models.js";
+import Category from "../models/category.models.js";
 
 // @desc    Create a new activity
 // @route   POST /api/activities
@@ -213,11 +214,19 @@ export const getActivitySummary = async (req, res) => {
     // Sort by duration (descending)
     categoryTotals.sort((a, b) => b.duration - a.duration);
 
-    // Calculate productivity score (coding + studying + reading)
+    // DYNAMIC productivity calculation
+    const userCategories = await Category.find({ userId });
+    const productiveCategories = [
+      "coding",
+      "studying",
+      "reading",
+      ...userCategories
+        .filter((cat) => cat.isProductive)
+        .map((cat) => cat.name),
+    ];
+
     const productiveMinutes = todayActivities
-      .filter((activity) =>
-        ["coding", "studying", "reading"].includes(activity.category)
-      )
+      .filter((activity) => productiveCategories.includes(activity.category))
       .reduce((sum, activity) => sum + activity.duration, 0);
 
     const productivityScore =

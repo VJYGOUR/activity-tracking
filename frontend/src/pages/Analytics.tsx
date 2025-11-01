@@ -69,10 +69,7 @@ const Analytics: React.FC = () => {
         averageDailyTime:
           data.averageDailyTime ||
           Math.round(data.totalMinutes / (timeRange === "weekly" ? 7 : 30)),
-        mostProductiveDay:
-          data.mostProductiveDay ||
-          data.dailyData[0]?.date ||
-          new Date().toISOString().split("T")[0],
+        // REMOVE the mostProductiveDay override - let the backend handle it
       };
 
       setAnalyticsData(completeData);
@@ -145,6 +142,11 @@ const Analytics: React.FC = () => {
   };
 
   const formatDate = (dateStr: string): string => {
+    // Handle the "No activities" case from backend
+    if (dateStr === "No activities") {
+      return "No activities";
+    }
+
     try {
       const date = new Date(dateStr);
       return date.toLocaleDateString("en-US", {

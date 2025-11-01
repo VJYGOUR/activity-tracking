@@ -37,6 +37,32 @@ export const activityAPI = {
   deleteActivity: async (id: string): Promise<void> => {
     await axiosInstance.delete(`/activities/${id}`);
   },
+  getActivitySummary: async (): Promise<{
+    totalMinutes: number;
+    totalActivities: number;
+    categoryTotals: Array<{
+      category: string;
+      duration: number;
+      count: number;
+    }>;
+    productivityScore: number;
+    productiveMinutes: number;
+  }> => {
+    const response = await axiosInstance.get<
+      ApiResponse<{
+        totalMinutes: number;
+        totalActivities: number;
+        categoryTotals: Array<{
+          category: string;
+          duration: number;
+          count: number;
+        }>;
+        productivityScore: number;
+        productiveMinutes: number;
+      }>
+    >("/activities/summary");
+    return response.data.data!;
+  },
 };
 
 // Categories API

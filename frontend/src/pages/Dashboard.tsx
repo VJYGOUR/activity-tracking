@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { activityAPI } from "../services/api";
 import type { ActivityResponse } from "../types";
-
 const Dashboard: React.FC = () => {
   const [todayActivities, setTodayActivities] = useState<ActivityResponse[]>(
     []
   );
+  const [productivityScore, setProductivityScore] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,6 +18,12 @@ const Dashboard: React.FC = () => {
       setLoading(true);
       const activities = await activityAPI.getTodayActivities();
       setTodayActivities(activities);
+
+      // Load productivity score if there are activities
+      if (activities.length > 0) {
+        const summary = await activityAPI.getActivitySummary();
+        setProductivityScore(summary.productivityScore);
+      }
     } catch (error) {
       console.error("Error loading activities:", error);
     } finally {
@@ -143,16 +149,7 @@ const Dashboard: React.FC = () => {
             <div>
               <p className="text-sm text-gray-400">Productivity</p>
               <p className="text-3xl font-bold text-white">
-                {Math.round(
-                  (categoryTotals
-                    .filter((cat) =>
-                      ["coding", "studying", "reading"].includes(cat.category)
-                    )
-                    .reduce((sum, cat) => sum + cat.duration, 0) /
-                    totalMinutes) *
-                    100
-                ) || 0}
-                %
+                {productivityScore}%
               </p>
               <p className="text-sm text-gray-500 mt-1">Learning time</p>
             </div>

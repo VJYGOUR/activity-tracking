@@ -15,6 +15,7 @@ const Categories: React.FC = () => {
     name: "",
     emoji: "📝",
     color: "#666666",
+    isProductive: false,
   });
 
   useEffect(() => {
@@ -44,7 +45,12 @@ const Categories: React.FC = () => {
     try {
       await categoryAPI.createCategory(formData);
       // Reset form and reload categories
-      setFormData({ name: "", emoji: "📝", color: "#666666" });
+      setFormData({
+        name: "",
+        emoji: "📝",
+        color: "#666666",
+        isProductive: false,
+      });
       setShowAddForm(false);
       await loadCategories();
     } catch (error: unknown) {
@@ -142,7 +148,7 @@ const Categories: React.FC = () => {
             Add New Category
           </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Emoji Selection */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -166,23 +172,6 @@ const Categories: React.FC = () => {
                     </button>
                   ))}
                 </div>
-              </div>
-
-              {/* Category Name */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-2">
-                  Category Name
-                </label>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
-                  placeholder="e.g., gaming, gym, cooking..."
-                  maxLength={20}
-                />
               </div>
 
               {/* Color Selection */}
@@ -215,6 +204,47 @@ const Categories: React.FC = () => {
                   ))}
                 </div>
               </div>
+
+              {/* Category Name - Full width */}
+              <div className="md:col-span-2">
+                <label className="block text-sm font-medium text-gray-300 mb-2">
+                  Category Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData((prev) => ({ ...prev, name: e.target.value }))
+                  }
+                  className="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-blue-500"
+                  placeholder="e.g., gaming, gym, cooking..."
+                  maxLength={20}
+                />
+              </div>
+
+              {/* Productivity Toggle - Full width */}
+              <div className="md:col-span-2">
+                <label className="flex items-center space-x-3">
+                  <input
+                    type="checkbox"
+                    checked={formData.isProductive || false}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        isProductive: e.target.checked,
+                      }))
+                    }
+                    className="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 rounded focus:ring-blue-500"
+                  />
+                  <span className="text-white font-medium">
+                    Count as productive time
+                  </span>
+                </label>
+                <p className="text-gray-400 text-sm mt-1 ml-7">
+                  Productive categories contribute to your productivity score.
+                  Only coding, studying, and reading are productive by default.
+                </p>
+              </div>
             </div>
 
             {/* Form Actions */}
@@ -223,7 +253,12 @@ const Categories: React.FC = () => {
                 type="button"
                 onClick={() => {
                   setShowAddForm(false);
-                  setFormData({ name: "", emoji: "📝", color: "#666666" });
+                  setFormData({
+                    name: "",
+                    emoji: "📝",
+                    color: "#666666",
+                    isProductive: false,
+                  });
                 }}
                 className="flex-1 bg-gray-700 text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-600 transition-colors border border-gray-600"
               >
@@ -260,9 +295,16 @@ const Categories: React.FC = () => {
                 <span className="text-2xl" style={{ color: category.color }}>
                   {category.emoji}
                 </span>
-                <span className="font-medium text-white capitalize">
-                  {category.name.replace("_", " ")}
-                </span>
+                <div>
+                  <span className="font-medium text-white capitalize block">
+                    {category.name.replace("_", " ")}
+                  </span>
+                  {category.isProductive && (
+                    <span className="text-xs text-green-400 block mt-1">
+                      Productive
+                    </span>
+                  )}
+                </div>
               </div>
               <span className="text-xs text-gray-400 px-2 py-1 bg-gray-600 rounded">
                 Default
@@ -305,15 +347,32 @@ const Categories: React.FC = () => {
                   </span>
                   <button
                     onClick={() => deleteCategory(category._id, category.name)}
-                    className="opacity-0 group-hover:opacity-100 p-1 text-gray-400 hover:text-red-400 transition-all"
+                    className="opacity-100 md:opacity-0 md:group-hover:opacity-100 p-2 bg-red-500/10 hover:bg-red-500/20 rounded-lg transition-all duration-200 group/delete"
                     title="Delete category"
                   >
-                    🗑️
+                    <svg
+                      className="w-4 h-4 text-red-400 group-hover/delete:text-red-300 transition-colors"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                      />
+                    </svg>
                   </button>
                 </div>
                 <p className="font-medium text-white capitalize">
                   {category.name.replace("_", " ")}
                 </p>
+                {category.isProductive && (
+                  <span className="text-xs text-green-400 block mt-1">
+                    Productive
+                  </span>
+                )}
                 <div
                   className="w-full h-1 rounded-full mt-2"
                   style={{ backgroundColor: category.color }}
@@ -333,6 +392,10 @@ const Categories: React.FC = () => {
           <li>• Create categories for activities you do regularly</li>
           <li>• Use emojis to make categories easily recognizable</li>
           <li>• Different colors help distinguish categories at a glance</li>
+          <li>
+            • Mark categories as "productive" to include them in your
+            productivity score
+          </li>
           <li>• You can track time against any custom category</li>
         </ul>
       </div>

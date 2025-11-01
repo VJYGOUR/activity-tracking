@@ -26,6 +26,10 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isProductive: {
+      type: Boolean,
+      default: false, // User decides if custom category is productive
+    },
   },
   { timestamps: true }
 );

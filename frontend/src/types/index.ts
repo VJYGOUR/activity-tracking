@@ -24,6 +24,7 @@ export interface CreateCategoryData {
   name: string;
   emoji: string;
   color?: string;
+  isProductive?: boolean; // ADD THIS LINE
 }
 export interface CategoryResponse {
   _id?: string; // Add this line
@@ -31,6 +32,7 @@ export interface CategoryResponse {
   emoji: string;
   color: string;
   isDefault: boolean;
+  isProductive: boolean;
 }
 
 export interface TimeRange {
