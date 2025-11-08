@@ -10,6 +10,8 @@ import { fileURLToPath } from "url";
 import activityRoutes from "./routes/activity.route.js";
 import categoryRoutes from "./routes/category.route.js";
 import analyticsRoutes from "./routes/analytics.route.js";
+import subscriptionRoutes from "./routes/subscription.route.js";
+import webhookRoutes from "./routes/webhook.route.js";
 
 const app = express();
 configDotenv();
@@ -40,6 +42,8 @@ app.use("/api/categories", categoryRoutes);
 
 // Add with your other routes
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/subscription", subscriptionRoutes);
+app.use("/api/webhook", webhookRoutes);
 
 // Add with your other routes
 

@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../utils/AuthContext";
+import SubscriptionPage from "./SubscriptionPage";
 
 const Home: React.FC = () => {
   const { user } = useAuth();
@@ -213,6 +214,7 @@ const Home: React.FC = () => {
           </div>
         </div>
       </section>
+      {user?.plan === "free" && <SubscriptionPage />}
 
       {/* Features Section */}
       <section id="features" className="py-20 bg-gray-50">
