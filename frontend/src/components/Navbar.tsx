@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   onMenuClick: () => void;
@@ -6,6 +7,7 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ onMenuClick, showMenu }) => {
+  const navigate = useNavigate();
   return (
     <nav className="bg-gray-800 shadow-sm border-b border-gray-700">
       {" "}
@@ -40,7 +42,12 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick, showMenu }) => {
               <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <span className="text-white text-lg">⏱️</span>
               </div>
-              <h1 className="ml-2 text-xl font-bold text-white">LogTaskr</h1>{" "}
+              <h1
+                onClick={() => navigate("/")}
+                className="ml-2 text-xl font-bold text-white cursor-pointer"
+              >
+                LogTaskr
+              </h1>
               {/* White text */}
             </div>
           </div>
