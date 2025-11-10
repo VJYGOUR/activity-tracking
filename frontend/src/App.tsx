@@ -41,12 +41,11 @@ const App: React.FC = () => {
               path="/manage-subscription"
               element={<ManageSubscription />}
             />
-
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/add-activity" element={<AddActivity />} />
+            <Route path="/history" element={<History />} />
             {/* ✅ Paid-only routes */}
             <Route element={<RequireSubscription />}>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/add-activity" element={<AddActivity />} />
-              <Route path="/history" element={<History />} />
               <Route path="/categories" element={<Categories />} />
               <Route path="/analytics" element={<Analytics />} />
             </Route>
