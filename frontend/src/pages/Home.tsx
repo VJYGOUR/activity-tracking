@@ -1,65 +1,78 @@
+// Home.tsx
 import React from "react";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 import { useAuth } from "../utils/AuthContext";
 import SubscriptionPage from "./SubscriptionPage";
+
+/**
+ * Redesigned Home page: "Find Your Dumb Work"
+ * - Keeps all logic intact (useAuth, SubscriptionPage, steps, features, conditional links)
+ * - Upgrades UI with modern visuals and motion
+ * - Requires framer-motion + Tailwind
+ */
 
 const Home: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-indigo-900 to-purple-900 text-slate-100">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <div className="flex-shrink-0">
-                <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+      <nav className="bg-white/6 backdrop-blur-sm border-b border-white/6 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between h-16">
+            <div className="flex items-center space-x-6">
+              <div>
+                <h1 className="text-2xl font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300">
                   LogTaskr
                 </h1>
+                <p className="text-xs text-slate-400 -mt-1">
+                  Find your dumb work.
+                </p>
               </div>
             </div>
-            <div className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-8">
-                <a
-                  href="#features"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Features
-                </a>
-                <a
-                  href="#how-it-works"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  How It Works
-                </a>
-                <a
-                  href="#testimonials"
-                  className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
-                >
-                  Testimonials
-                </a>
-              </div>
+
+            <div className="hidden md:flex items-center space-x-8">
+              <a
+                href="#features"
+                className="text-slate-300 hover:text-white transition"
+              >
+                Features
+              </a>
+              <a
+                href="#how-it-works"
+                className="text-slate-300 hover:text-white transition"
+              >
+                How It Works
+              </a>
+              <a
+                href="#testimonials"
+                className="text-slate-300 hover:text-white transition"
+              >
+                Testimonials
+              </a>
             </div>
+
             <div className="flex items-center space-x-4">
               {user ? (
                 <Link
                   to="/dashboard"
-                  className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                  className="inline-flex items-center gap-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white px-4 py-2 rounded-lg font-semibold shadow-lg hover:scale-[1.02] transition-transform"
                 >
-                  Go to Dashboard
+                  <span>Dashboard</span>
+                  <span aria-hidden>🚀</span>
                 </Link>
               ) : (
                 <>
                   <Link
                     to="/login"
-                    className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+                    className="text-slate-300 hover:text-white transition font-medium"
                   >
                     Sign In
                   </Link>
                   <Link
                     to="/signup"
-                    className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+                    className="inline-flex items-center gap-3 bg-white text-indigo-700 px-4 py-2 rounded-lg font-semibold shadow hover:shadow-xl transition"
                   >
                     Get Started Free
                   </Link>
@@ -70,308 +83,403 @@ const Home: React.FC = () => {
         </div>
       </nav>
 
-      {/* Hero Section */}
-      <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-              Track Your Time
-              <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Master Your Day
-              </span>
-            </h1>
-            <p className="text-xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Simple, intuitive time tracking for coding, studying, reading, and
-              everything else that matters. Understand where your time goes and
-              boost your productivity.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              {user ? (
-                <Link
-                  to="/dashboard"
-                  className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-2xl hover:shadow-3xl"
+      {/* HERO */}
+      <header className="pt-24 pb-16">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left: copy */}
+            <div className="lg:col-span-6">
+              <motion.h1
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="text-4xl sm:text-5xl md:text-6xl font-extrabold leading-tight"
+              >
+                Find your{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-300 to-indigo-300">
+                  Dumb Work
+                </span>
+                <div className="mt-2 text-indigo-200 text-2xl font-medium">
+                  Work smarter starts here.
+                </div>
+              </motion.h1>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.12, duration: 0.6 }}
+                className="mt-6 text-lg text-slate-300 max-w-2xl"
+              >
+                You can’t optimize what you can’t see. LogTaskr shows where your
+                time leaks away — so you can cut distractions, protect deep
+                work, and build better habits.
+              </motion.p>
+
+              <motion.div
+                initial={{ opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.24, duration: 0.5 }}
+                className="mt-8 flex flex-col sm:flex-row gap-4"
+              >
+                {user ? (
+                  <Link
+                    to="/dashboard"
+                    className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 font-semibold shadow-lg hover:scale-[1.02] transition transform"
+                  >
+                    Launch Dashboard
+                    <span className="ml-3">🚀</span>
+                  </Link>
+                ) : (
+                  <>
+                    <Link
+                      to="/signup"
+                      className="inline-flex items-center justify-center px-6 py-3 rounded-xl bg-white text-indigo-700 font-semibold shadow hover:shadow-xl transition transform"
+                    >
+                      Start Free Trial
+                      <span className="ml-3">✨</span>
+                    </Link>
+                    <Link
+                      to="/login"
+                      className="inline-flex items-center justify-center px-6 py-3 rounded-xl border border-white/10 text-slate-200 hover:border-white/30 transition"
+                    >
+                      See Demo
+                    </Link>
+                  </>
+                )}
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.36, duration: 0.5 }}
+                className="mt-6 text-sm text-slate-400"
+              >
+                <span className="inline-block mr-4">
+                  No credit card required
+                </span>
+                <span className="inline-block mr-4">•</span>
+                <span className="inline-block">Free forever plan</span>
+              </motion.div>
+            </div>
+
+            {/* Right: premium mockup */}
+            <div className="lg:col-span-6">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.6 }}
+                className="relative"
+              >
+                {/* glowing background */}
+                <div className="absolute -inset-2 blur-3xl opacity-30 bg-gradient-to-tr from-purple-700 via-indigo-600 to-blue-500 rounded-3xl transform -translate-y-3 scale-[1.02]"></div>
+
+                {/* glass card */}
+                <div className="relative bg-white/6 backdrop-blur-md border border-white/8 rounded-3xl p-6 shadow-2xl">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h4 className="text-slate-50 font-semibold">
+                        Today's Focus
+                      </h4>
+                      <p className="text-xs text-slate-400">
+                        See where your effort is going
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-3">
+                      <span className="w-2 h-2 rounded-full bg-green-400/80"></span>
+                      <span className="w-2 h-2 rounded-full bg-yellow-400/80"></span>
+                      <span className="w-2 h-2 rounded-full bg-red-400/80"></span>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="col-span-1 space-y-3">
+                      <div className="bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl p-4 text-white">
+                        <div className="flex justify-between items-center mb-3">
+                          <div className="font-medium">💻 Coding</div>
+                          <div className="font-semibold">2h 15m</div>
+                        </div>
+                        <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                          <div
+                            className="h-2 bg-white/40 rounded-full"
+                            style={{ width: "60%" }}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="bg-white/5 rounded-xl p-3 text-slate-200">
+                        <div className="flex justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="text-2xl">📚</div>
+                            <div>Studying</div>
+                          </div>
+                          <div className="font-semibold">1h 30m</div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="col-span-1 space-y-3">
+                      <div className="bg-white/5 rounded-xl p-3 text-slate-200">
+                        <div className="flex justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="text-2xl">☕</div>
+                            <div>Break Time</div>
+                          </div>
+                          <div className="font-semibold">45m</div>
+                        </div>
+                      </div>
+
+                      <div className="bg-white/5 rounded-xl p-4 flex items-center justify-between">
+                        <div>
+                          <p className="text-xs text-slate-400">
+                            Today's Total
+                          </p>
+                          <p className="font-bold text-slate-50 text-xl">
+                            4h 30m
+                          </p>
+                        </div>
+                        <div className="w-12 h-12 bg-indigo-700/30 rounded-lg flex items-center justify-center">
+                          <span>⏱️</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-5 text-xs text-slate-400">
+                    Built for creators · private & secure
+                  </div>
+                </div>
+
+                {/* small floating CTA */}
+                <motion.div
+                  initial={{ y: 8, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.45 }}
+                  className="absolute -bottom-6 right-4"
                 >
-                  Launch Dashboard 🚀
-                </Link>
-              ) : (
-                <>
                   <Link
                     to="/signup"
-                    className="bg-blue-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition-all transform hover:scale-105 shadow-2xl hover:shadow-3xl"
+                    className="inline-flex items-center gap-2 bg-white text-indigo-700 px-4 py-2 rounded-full font-semibold shadow-lg"
                   >
-                    Start Free Trial
+                    Start free trial
+                    <span>→</span>
                   </Link>
-                  <Link
-                    to="/login"
-                    className="border-2 border-gray-300 text-gray-700 px-8 py-4 rounded-xl font-semibold text-lg hover:border-blue-600 hover:text-blue-600 transition-all"
-                  >
-                    See Demo
-                  </Link>
-                </>
-              )}
-            </div>
-          </div>
-
-          {/* Hero Preview */}
-          <div className="mt-20 max-w-6xl mx-auto">
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/20">
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                {/* Time Tracking Preview */}
-                <div className="bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl p-6 text-white lg:col-span-2">
-                  <div className="flex items-center justify-between mb-6">
-                    <h3 className="font-semibold">Today's Activities</h3>
-                    <div className="flex space-x-2">
-                      <div className="w-3 h-3 bg-white/30 rounded-full"></div>
-                      <div className="w-3 h-3 bg-white/30 rounded-full"></div>
-                      <div className="w-3 h-3 bg-white/30 rounded-full"></div>
-                    </div>
-                  </div>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center bg-white/20 rounded-lg p-4">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-xl">💻</span>
-                        <span>Coding</span>
-                      </div>
-                      <span className="font-bold">2h 15m</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-white/20 rounded-lg p-4">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-xl">📚</span>
-                        <span>Studying</span>
-                      </div>
-                      <span className="font-bold">1h 30m</span>
-                    </div>
-                    <div className="flex justify-between items-center bg-white/20 rounded-lg p-4">
-                      <div className="flex items-center space-x-3">
-                        <span className="text-xl">💑</span>
-                        <span>GF Time</span>
-                      </div>
-                      <span className="font-bold">45m</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stats Preview */}
-                <div className="space-y-6">
-                  <div className="bg-white rounded-xl p-6 shadow-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-gray-600">Today's Total</p>
-                        <p className="text-2xl font-bold text-gray-900">
-                          4h 30m
-                        </p>
-                      </div>
-                      <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                        <span className="text-2xl">⏱️</span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="bg-white rounded-xl p-6 shadow-lg">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-gray-600">Productivity</p>
-                        <p className="text-2xl font-bold text-gray-900">87%</p>
-                      </div>
-                      <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                        <span className="text-2xl">📈</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+                </motion.div>
+              </motion.div>
             </div>
           </div>
         </div>
-      </section>
+      </header>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Simple Time Tracking in 3 Steps
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Start tracking your time in less than a minute. No complicated
-              setup required.
+      {/* How It Works */}
+      <section id="how-it-works" className="py-20 bg-slate-900/40">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold">Find. Track. Improve.</h2>
+            <p className="mt-3 text-slate-300 max-w-2xl mx-auto">
+              In three simple steps, discover where your time goes and take
+              action.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {steps.map((step, index) => (
-              <div key={index} className="text-center">
-                <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white text-2xl font-bold mx-auto mb-6">
+              <motion.div
+                key={index}
+                whileHover={{ translateY: -6 }}
+                className="bg-white/4 rounded-2xl p-8 text-center border border-white/6"
+              >
+                <div className="mx-auto w-16 h-16 rounded-full flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xl font-bold mb-4">
                   {index + 1}
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
+                <h3 className="text-lg font-semibold mb-2 text-white">
                   {step.title}
                 </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
+                <p className="text-sm text-slate-300">{step.description}</p>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
+
+      {/* Optional Subscription prompt */}
       {user?.plan === "free" && <SubscriptionPage />}
 
-      {/* Features Section */}
-      <section id="features" className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-              Powerful Features for Better Time Management
+      {/* Features */}
+      <section
+        id="features"
+        className="py-20 bg-gradient-to-b from-slate-900 to-indigo-950"
+      >
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white">
+              Tools to Help You Work Smarter
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Everything you need to understand and optimize how you spend your
-              time.
+            <p className="mt-3 text-slate-300 max-w-2xl mx-auto">
+              Spot time leaks, measure progress, and build habits that stick.
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div
+              <motion.div
                 key={index}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-blue-200"
+                whileHover={{ scale: 1.03 }}
+                className="bg-white/5 border border-white/6 rounded-2xl p-6 shadow-md"
               >
-                <div className="w-16 h-16 bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center text-2xl text-white mb-6">
-                  {feature.icon}
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-xl flex items-center justify-center bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-2xl shadow">
+                    {feature.icon}
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">
+                      {feature.title}
+                    </h3>
+                    <p className="text-sm text-slate-300 mt-1">
+                      {feature.description}
+                    </p>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-4">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 to-purple-700">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">
-            Ready to Take Control of Your Time?
-          </h2>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Join thousands of productive people who use LogTaskr to understand
-            and optimize their daily activities.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+      {/* CTA */}
+      <section className="py-20 bg-gradient-to-r from-indigo-900 to-purple-800">
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <motion.h2
+            initial={{ y: 8, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-3xl font-bold text-white"
+          >
+            Find Your Dumb Work. Do More Smart Work.
+          </motion.h2>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.12 }}
+            className="mt-4 text-slate-200"
+          >
+            Join creators using LogTaskr to reclaim focus and ship better work —
+            without working longer hours.
+          </motion.p>
+
+          <div className="mt-8 flex justify-center gap-4">
             {user ? (
               <Link
                 to="/dashboard"
-                className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl"
+                className="bg-white text-indigo-700 px-6 py-3 rounded-xl font-semibold shadow hover:scale-[1.02] transition"
               >
-                Go to Dashboard 🚀
+                Go to Dashboard
               </Link>
             ) : (
               <>
                 <Link
                   to="/signup"
-                  className="bg-white text-blue-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl"
+                  className="bg-white text-indigo-700 px-6 py-3 rounded-xl font-semibold shadow hover:scale-[1.02] transition"
                 >
                   Start Free Trial
                 </Link>
                 <Link
                   to="/login"
-                  className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all"
+                  className="px-6 py-3 rounded-xl border border-white/20 text-white hover:bg-white/10 transition"
                 >
                   See Live Demo
                 </Link>
               </>
             )}
           </div>
-          <p className="text-blue-200 mt-6 text-sm">
-            No credit card required • Free forever plan • Setup in 2 minutes
+
+          <p className="text-slate-300 mt-4 text-sm">
+            No credit card • Free forever plan • Setup in 2 minutes
           </p>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <footer className="bg-slate-900/80 border-t border-white/6 py-12">
+        <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-4">
+              <h3 className="text-2xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-indigo-300 to-purple-300">
                 LogTaskr
               </h3>
-              <p className="text-gray-400">
-                Helping you make the most of every minute.
+              <p className="mt-3 text-slate-400">
+                Helping you find where your dumb work hides — and do more of
+                what matters.
               </p>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-gray-400">
+              <h4 className="font-semibold text-slate-200 mb-3">Product</h4>
+              <ul className="space-y-2 text-slate-400">
                 <li>
-                  <a
-                    href="#features"
-                    className="hover:text-white transition-colors"
-                  >
+                  <a href="#features" className="hover:text-white transition">
                     Features
                   </a>
                 </li>
                 <li>
                   <a
                     href="#how-it-works"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-white transition"
                   >
                     How It Works
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     Pricing
                   </a>
                 </li>
               </ul>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <ul className="space-y-2 text-gray-400">
+              <h4 className="font-semibold text-slate-200 mb-3">Company</h4>
+              <ul className="space-y-2 text-slate-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     About
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     Blog
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     Careers
                   </a>
                 </li>
               </ul>
             </div>
+
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-400">
+              <h4 className="font-semibold text-slate-200 mb-3">Support</h4>
+              <ul className="space-y-2 text-slate-400">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     Help Center
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     Contact
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-white transition">
                     Guides
                   </a>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 LogTaskr. All rights reserved.</p>
+
+          <div className="border-t border-white/6 mt-10 pt-8 text-center text-slate-500">
+            <p>© 2024 LogTaskr. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -379,62 +487,61 @@ const Home: React.FC = () => {
   );
 };
 
-// Steps data
+// Steps and features are intentionally preserved (only copy adjusted)
 const steps = [
   {
     title: "Choose Activity",
     description:
-      "Select from coding, studying, reading, or create your own custom categories.",
+      "Pick what you're doing — coding, studying, reading, or your own custom category.",
   },
   {
     title: "Log Your Time",
     description:
-      "Enter how much time you spent. Just minutes or hours - no complicated timers.",
+      "Add your time in seconds — no complex timers or confusing settings.",
   },
   {
-    title: "See Insights",
+    title: "Spot Your Dumb Work",
     description:
-      "View your daily totals and understand where your time goes with simple charts.",
+      "See patterns, distractions, and where your effort leaks away. Awareness is the first step to working smarter.",
   },
 ];
 
-// Features data
 const features = [
   {
     icon: "⏱️",
     title: "Quick Time Entry",
     description:
-      "Log activities in seconds with our simple, intuitive interface. No complex setup required.",
+      "Log activities in seconds with a simple, intuitive interface. No friction, no distractions.",
   },
   {
     icon: "🏷️",
     title: "Custom Categories",
     description:
-      "Track coding, studying, reading, or create your own categories for anything you do.",
+      "Track coding, studying, reading, or anything you do. You define what matters.",
   },
   {
     icon: "📊",
-    title: "Visual Dashboard",
+    title: "Visual Insights",
     description:
-      "See your time distribution with clean charts and understand your productivity patterns.",
+      "Understand your productivity patterns with clean, meaningful charts that reveal where your dumb work hides.",
   },
   {
     icon: "📱",
     title: "Mobile Friendly",
     description:
-      "Track your time from anywhere with our responsive design that works on all devices.",
+      "Track from anywhere with a responsive, distraction-free design built for any device.",
   },
   {
     icon: "🔒",
     title: "Private & Secure",
     description:
-      "Your data stays yours. We never share your activity data with third parties.",
+      "Your data is yours alone. LogTaskr never shares or sells your information.",
   },
   {
     icon: "📈",
-    title: "Progress Tracking",
+    title: "Habit Builder",
     description:
-      "Set goals and track your progress over time to build better habits and routines.",
+      "Use your insights to make better decisions, improve focus, and build smarter habits over time.",
   },
 ];
 
