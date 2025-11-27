@@ -17,6 +17,7 @@ import Analytics from "./pages/Analytics";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import ManageSubscription from "./pages/ManageSubscription.tsx";
 import RequireSubscription from "./utils/RequireSubscription.tsx";
+import RouteProgressBar from "./components/RouteProgressBar.tsx";
 
 // Import Sales Tracker pages
 
@@ -25,6 +26,7 @@ import RequireSubscription from "./utils/RequireSubscription.tsx";
 const App: React.FC = () => {
   return (
     <AuthProvider>
+      <RouteProgressBar />
       <Routes>
         {/* Public routes without sidebar layout */}
         <Route path="/" element={<Home />} />

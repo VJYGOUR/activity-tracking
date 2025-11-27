@@ -40,7 +40,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
   const refreshUser = async (): Promise<void> => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get<{ user: User }>("/auth/me");
+      const res = await axiosInstance.get<{ user: User }>("/auth/me"); //Fetches user data,
       setUser(res.data.user);
     } catch (err: unknown) {
       setUser(null);

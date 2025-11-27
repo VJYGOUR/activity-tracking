@@ -34,10 +34,10 @@ const Login = () => {
       resetMessages();
       setIsLoading(true);
       try {
-        const response = await axiosInstance.post("/auth/login", data);
+        const response = await axiosInstance.post("/auth/login", data); //succesfully login hone par cookies me token set kardiye
         console.log("response is", response);
         setSuccessMessage("Logged in successfully!");
-        await login();
+        await login(); // is function ko execute karke 'me' controller run kiya or request object me cookie already set hogyi thi login par, to cookie ka use karke user findout kiya and recieve kiya frontend me , or usko user state me set kiya fir protected route component hai uske through agr user available hua toh authenticated pages dikhege vrna nhi
         navigate("/dashboard");
       } catch (err) {
         setErrorMessage(handleApiError(err));

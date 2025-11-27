@@ -1,33 +1,12 @@
 import validator from "validator";
-import nodemailer from "nodemailer";
-import { configDotenv } from "dotenv";
-configDotenv();
+import sgMail from "@sendgrid/mail";
 
-// ----------------------
-// 1️⃣ Setup Brevo SMTP Transporter
-// ----------------------
-const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
-  auth: {
-    user: process.env.BREVO_SMTP_USER, // e.g. 9ca50a001@smtp-brevo.com
-    pass: process.env.BREVO_SMTP_PASS, // your SMTP password
-  },
-});
+// Initialize SendGrid
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+console.log("🔑 SENDGRID_API_KEY present:", !!process.env.SENDGRID_API_KEY);
+console.log("📤 FROM EMAIL:", process.env.SENDGRID_FROM_EMAIL);
 
-// Test the SMTP connection on server start
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("❌ SMTP Connection Failed:", error);
-  } else {
-    console.log("✅ SMTP Server Ready to Send Emails");
-  }
-});
-
-// ----------------------
-// 2️⃣ Validate Email (your original logic) — UNTOUCHED
-// ----------------------
+// Validate email format, disposable emails, and fake patterns
 export const validateEmail = async (email) => {
   try {
     if (!validator.isEmail(email)) {
@@ -71,17 +50,15 @@ export const validateEmail = async (email) => {
   }
 };
 
-// ----------------------------------------------------
-// 3️⃣ Send Verification Email (same logic, just SMTP)
-// ----------------------------------------------------
+// Send verification email using SendGrid - YOUR EXISTING LOGIC
 export const sendVerificationEmail = async (email, verificationToken) => {
   try {
     const frontendUrl = process.env.FRONTEND_URL?.replace(/\/$/, "");
     const verificationUrl = `${frontendUrl}/verify-email?token=${verificationToken}`;
 
     const msg = {
-      from: process.env.SENDGRID_FROM_EMAIL, // Your FROM email stays same
       to: email,
+      from: process.env.SENDGRID_FROM_EMAIL,
       subject: "Verify Your LogTaskr Account",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -99,7 +76,7 @@ export const sendVerificationEmail = async (email, verificationToken) => {
       `,
     };
 
-    await transporter.sendMail(msg);
+    await sgMail.send(msg);
     console.log(`✅ Verification email sent to ${email}`);
     return true;
   } catch (error) {
@@ -108,13 +85,11 @@ export const sendVerificationEmail = async (email, verificationToken) => {
   }
 };
 
-// ----------------------------------------------------
-// 4️⃣ Send Admin Notification Email (logic unchanged)
-// ----------------------------------------------------
+// NEW: Send admin notification when user registers
 export const sendNewUserNotification = async (user) => {
   try {
     const msg = {
-      to: process.env.ADMIN_EMAIL || process.env.SENDGRID_FROM_EMAIL,
+      to: process.env.ADMIN_EMAIL || process.env.SENDGRID_FROM_EMAIL, // Send to admin or fallback to from email
       from: process.env.SENDGRID_FROM_EMAIL,
       subject: "🎉 New User Registered on LogTaskr!",
       html: `
@@ -129,11 +104,14 @@ export const sendNewUserNotification = async (user) => {
               user.isEmailVerified ? "Yes" : "No"
             }</p>
           </div>
+          <p style="margin-top: 20px; color: #6b7280;">
+            This is an automated notification from your LogTaskr app.
+          </p>
         </div>
       `,
     };
 
-    await transporter.sendMail(msg);
+    await sgMail.send(msg);
     console.log(`📧 Admin notification sent for new user: ${user.email}`);
     return true;
   } catch (error) {
@@ -142,9 +120,7 @@ export const sendNewUserNotification = async (user) => {
   }
 };
 
-// ----------------------------------------------------
-// 5️⃣ Send Welcome Email (logic unchanged)
-// ----------------------------------------------------
+// NEW: Send welcome email to user (optional)
 export const sendWelcomeEmail = async (user) => {
   try {
     const msg = {
@@ -154,13 +130,20 @@ export const sendWelcomeEmail = async (user) => {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #3B82F6;">Welcome to LogTaskr, ${user.name}! 🎉</h2>
-          <p>We're excited to have you on board.</p>
+          <p>We're excited to have you on board. Here's what you can do with LogTaskr:</p>
+          <ul>
+            <li>📊 Track your time across different activities</li>
+            <li>📈 View beautiful analytics and insights</li>
+            <li>🏷️ Create custom categories</li>
+            <li>📱 Access from any device</li>
+          </ul>
           <p>Ready to get started? <a href="${process.env.FRONTEND_URL}">Login to your account</a></p>
+          <p>If you have any questions, just reply to this email!</p>
         </div>
       `,
     };
 
-    await transporter.sendMail(msg);
+    await sgMail.send(msg);
     console.log(`✅ Welcome email sent to ${user.email}`);
     return true;
   } catch (error) {
